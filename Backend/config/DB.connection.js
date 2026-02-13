@@ -1,15 +1,20 @@
 const mongoose = require('mongoose')
-
 require('dotenv').config()
 
+async function mongodb() {
+  try {
+    const uri = process.env.MONGO_URI
 
-async function mongodb(){
-    try{
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log('✅ DataBase is conneted')
-    } catch(error){
-        console.log('❌ DataBase is disconnet', error)
+    if (!uri) {
+      throw new Error("MONGO_URI missing")
     }
+
+    await mongoose.connect(uri)
+    console.log('✅ DataBase is connected')
+  } catch (error) {
+    console.log('❌ DataBase is disconnect', error.message)
+    process.exit(1)   // stop server if DB fails
+  }
 }
 
 module.exports = mongodb
